@@ -18,6 +18,12 @@ class FileRepository extends BaseRepository implements FileRepositoryInterface
         return $this->model->insert($data->toArray());
     }
 
+    public function findById(int $id): ?File
+    {
+        return $this->model->find($id);
+    }
+
+
     public function update(File $file, Collection $data): File
     {
         $file->update($data->toArray());

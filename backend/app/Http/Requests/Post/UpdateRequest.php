@@ -18,7 +18,7 @@ class UpdateRequest extends FormRequest
             'content' => 'required',
             'published_at' => 'date|required',
             'is_published' => 'boolean|required',
-            'files.*' => 'mimes:jpg,png,pdf,docx'
+            'files.*' => 'mimes:jpg,png,pdf,docx,txt,csv'
         ];
     }
 }

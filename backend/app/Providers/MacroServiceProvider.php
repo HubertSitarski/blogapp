@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Str;
 use Illuminate\Support\ServiceProvider;
 
 class MacroServiceProvider extends ServiceProvider
@@ -13,5 +14,8 @@ class MacroServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Str::macro('fixEncoding', function (string $string) {
+            return mb_convert_encoding($string, 'UTF-8', 'UTF-8');
+        });
     }
 }
