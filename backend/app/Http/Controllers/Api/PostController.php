@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
 use App\Models\Post;
+use App\Services\Api\FileService;
 use App\Services\Api\FractalService;
 use App\Services\Api\PostService;
 use App\Transformers\Api\PostTransformer;
@@ -17,7 +18,8 @@ class PostController extends Controller
     public function __construct(
         private PostService $postService,
         private FractalService $fractalService,
-        private PostTransformer $postTransformer
+        private PostTransformer $postTransformer,
+        private FileService $fileService
     ) {
     }
 
@@ -32,12 +34,20 @@ class PostController extends Controller
 
     public function store(StoreRequest $request): JsonResponse
     {
+        $post = $this->postService->create(collect($request->all()));
+
+        $files = $request->file('files');
+
+        if ($files && is_array($files)) {
+            $this->fileService->upload($files, $post);
+        }
+
         return response()
             ->json(
                 $this
                     ->fractalService
                     ->getTransformedItem(
-                        $this->postService->create(collect($request->validated())),
+                        $post,
                         $this->postTransformer
                     ),
                 Response::HTTP_CREATED
@@ -53,6 +63,13 @@ class PostController extends Controller
 
     public function update(UpdateRequest $request, Post $post): JsonResponse
     {
+        $files = $request->file('files');
+
+        if ($files && is_array($files)) {
+            $this->fileService->destroy($post->files);
+            $this->fileService->upload($files, $post);
+        }
+
         return response()
             ->json(
                 $this

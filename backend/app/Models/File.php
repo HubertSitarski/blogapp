@@ -5,19 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class File extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'content',
-        'is_published',
-        'published_at'
+        'name',
+        'path',
+        'extension',
+        'model_type',
+        'model_id'
     ];
 
-    public function files()
+    public function model()
     {
-        return $this->morphMany(File::class, 'model');
+        return $this->morphTo();
     }
 }

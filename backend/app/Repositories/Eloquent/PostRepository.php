@@ -25,8 +25,7 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
 
     public function update(Post $post, Collection $data): Post
     {
-        $post->update($data->toArray());
-        return $post;
+        return tap($post)->update($data->toArray());
     }
 
     public function destroy(Post $post): bool

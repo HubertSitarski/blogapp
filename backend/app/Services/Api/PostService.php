@@ -3,13 +3,16 @@
 namespace App\Services\Api;
 
 use App\Models\Post;
+use App\Repositories\FileRepositoryInterface;
 use App\Repositories\PostRepositoryInterface;
 use Illuminate\Support\Collection;
 
 class PostService
 {
-    public function __construct(private PostRepositoryInterface $postRepository)
-    {
+    public function __construct(
+        private PostRepositoryInterface $postRepository,
+        private FileService $fileService
+    ) {
     }
 
     public function all(): Collection
@@ -29,6 +32,7 @@ class PostService
 
     public function destroy(Post $post): bool
     {
+        $this->fileService->destroy($post->files);
         return $this->postRepository->destroy($post);
     }
 }
