@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Jobs\SendRegisteredNotificationJob;
+use App\Notifications\UserRegisteredNotification;
 use App\Services\Api\FractalService;
 use App\Services\Api\UserService;
 use App\Transformers\Api\UserTransformer;
@@ -24,6 +26,7 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         $user = $this->userService->register(collect($request->validated()));
+        SendRegisteredNotificationJob::dispatch($user);
         return response()
             ->json($this->fractalService->getTransformedItem($user, $this->userTransformer), Response::HTTP_CREATED)
             ;
