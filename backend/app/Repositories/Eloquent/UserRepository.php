@@ -3,7 +3,6 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\User;
-use App\Repositories\Eloquent\BaseRepository;
 use App\Repositories\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 
