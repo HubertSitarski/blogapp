@@ -10,7 +10,5 @@ use Illuminate\Database\Eloquent\Model;
  */
 interface EloquentRepositoryInterface
 {
-    public function create(array $attributes): Model;
-
-    public function find(int|string $id): ?Model;
+    public function find(int $id): ?Model;
 }

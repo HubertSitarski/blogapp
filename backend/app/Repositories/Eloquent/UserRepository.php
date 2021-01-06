@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Eloquent;
+namespace App\Repositories\Eloquent;
 
 use App\Models\User;
 use App\Repositories\Eloquent\BaseRepository;
@@ -17,5 +17,10 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function all(): Collection
     {
         return $this->model->all();
+    }
+
+    public function create(Collection $data): User
+    {
+        return $this->model->create($data->toArray());
     }
 }

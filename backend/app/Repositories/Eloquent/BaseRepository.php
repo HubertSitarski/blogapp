@@ -7,19 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
-    protected Model $model;
-
-    public function __construct(Model $model)
+    public function __construct(protected Model $model)
     {
-        $this->model = $model;
     }
 
-    public function create(array $attributes): Model
-    {
-        return $this->model->create($attributes);
-    }
-
-    public function find(int|string $id): ?Model
+    public function find(int $id): ?Model
     {
         return $this->model->find($id);
     }

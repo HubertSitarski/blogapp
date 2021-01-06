@@ -4,65 +4,46 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\Api\FractalService;
+use App\Services\Api\UserService;
 use App\Transformers\Api\UserTransformer;
-use Hash;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Models\User;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    private FractalService $fractalService;
-
-    private UserTransformer $userTransformer;
-
-    public function __construct(FractalService $fractalService, UserTransformer $userTransformer)
-    {
-        $this->fractalService = $fractalService;
-        $this->userTransformer = $userTransformer;
+    public function __construct(
+        private FractalService $fractalService,
+        private UserTransformer $userTransformer,
+        private UserService $userService
+    ) {
     }
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $validatedData = $request->validated();
-
-        $validatedData['password'] = Hash::make($request->password);
-
-        $user = User::create($validatedData);
-
-        $accessToken = $user->createToken('authToken')->accessToken;
-
-        return response()->json(['user' => $user, 'access_token' => $accessToken]);
+        $user = $this->userService->register(collect($request->validated()));
+        return response()
+            ->json($this->fractalService->getTransformedItem($user, $this->userTransformer), Response::HTTP_CREATED)
+            ;
     }
 
     public function login(LoginRequest $request): JsonResponse
     {
-        $loginData = $request->validated();
-
-        if (!auth()->attempt($loginData)) {
-            return response()->json(['message' => 'Invalid Credentials']);
+        if (!auth()->attempt($request->validated())) {
+            return response()->json(['message' => 'Invalid Credentials'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $accessToken = $request->user()->createToken('authToken')->accessToken;
-
         return response()
-            ->json(
-                [
-                    'user' => $this->fractalService->getTransformedItem(auth()->user(), $this->userTransformer),
-                    'access_token' => $accessToken
-                ]
-            )
-            ;
+            ->json(['data' => $request->user()->createToken('authToken')->accessToken]);
     }
 
     public function logout(Request $request): JsonResponse
     {
         $request->user()->token()->revoke();
-        return response()->json([
-            'message' => 'Successfully logged out'
-        ]);
+
+        return response()->json(['message' => 'Successfully logged out']);
     }
 
 }
