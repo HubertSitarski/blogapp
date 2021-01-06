@@ -28,8 +28,7 @@ class PostController extends Controller
         return response()
             ->json(
                 $this->fractalService->getTransformedCollection($this->postService->all(), $this->postTransformer)
-            )
-            ;
+            );
     }
 
     public function store(StoreRequest $request): JsonResponse
@@ -78,8 +77,7 @@ class PostController extends Controller
                         $this->postService->update($post, collect($request->validated())),
                         $this->postTransformer
                     )
-            )
-            ;
+            );
     }
 
     public function destroy(Post $post): JsonResponse

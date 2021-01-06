@@ -25,10 +25,6 @@ class SendRegisteredNotificationJob implements ShouldQueue
      */
     public function handle()
     {
-        try {
-            $this->user->notify(new UserRegisteredNotification());
-        } catch (\Exception $exception) {
-            var_dump($exception);die;
-        }
+        $this->user->notify(new UserRegisteredNotification());
     }
 }
