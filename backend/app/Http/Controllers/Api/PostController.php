@@ -84,4 +84,17 @@ class PostController extends Controller
     {
         return response()->json($this->postService->destroy($post), Response::HTTP_NO_CONTENT);
     }
+
+    public function changePublicity(Post $post): JsonResponse
+    {
+        return response()
+            ->json(
+                $this
+                    ->fractalService
+                    ->getTransformedItem(
+                        $this->postService->changePublicity($post),
+                        $this->postTransformer
+                    )
+            );
+    }
 }

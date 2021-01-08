@@ -35,4 +35,9 @@ class PostService
         $this->fileService->destroy($post->files);
         return $this->postRepository->destroy($post);
     }
+
+    public function changePublicity(Post $post): Post
+    {
+        return $this->postRepository->update($post, collect(['is_published' => !$post->is_published]));
+    }
 }

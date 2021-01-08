@@ -27,6 +27,7 @@ Route::group([
         'posts' => PostController::class,
     ]);
     Route::get('files/{id}', 'App\Http\Controllers\Api\FileController');
+    Route::post('/posts/change-publicity/{post}', 'App\Http\Controllers\Api\PostController@changePublicity');
 });
 
 Route::post('/register', 'App\Http\Controllers\Api\AuthController@register');
