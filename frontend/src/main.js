@@ -21,9 +21,11 @@ import router from './router'
 import './registerServiceWorker'
 import ArgonDashboard from './plugins/argon-dashboard'
 import store from './store'
+import {notifications} from "@/mixins/notifications";
 
 Vue.config.productionTip = false
 
+Vue.mixin(notifications)
 Vue.use(ArgonDashboard)
 new Vue({
   router,

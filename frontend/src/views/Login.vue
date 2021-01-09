@@ -81,9 +81,6 @@
 
         return validated
       },
-      errorNotify(message) {
-        this.$notify({type: 'danger', verticalAlign: 'top', horizontalAlign: 'center', message: message});
-      },
       handleLoginFormSubmit(){
         if (!this.validate()) {
           return;

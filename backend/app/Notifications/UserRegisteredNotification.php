@@ -40,9 +40,9 @@ class UserRegisteredNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Successfully registered!')
-                    ->line('You\'ve been successfully registered to blogapp page.')
-                    ->line('Thank you for using our application!');
+                    ->subject('Pomyślnie zarejestrowano!')
+                    ->line('Zostałeś pomyślnie zarejestrowany w aplikacji Blog.')
+                    ->line('Dziękujemy za korzystanie z naszej aplikacji!');
     }
 
     /**
