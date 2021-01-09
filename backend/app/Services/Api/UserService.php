@@ -17,6 +17,9 @@ class UserService
     {
         $data->put('password', \Hash::make($data->get('password')));
 
-        return $this->userRepository->create($data);
+        $user = $this->userRepository->create($data);
+
+        $user->assignRole(['User']);
+        return $user;
     }
 }
