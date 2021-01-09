@@ -20,14 +20,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group([
-    'middleware' => 'auth:api'
+    'middleware' => ['auth:api']
 ], function () {
     Route::get('logout', 'App\Http\Controllers\Api\AuthController@logout');
-    Route::resources([
-        'posts' => PostController::class,
-    ]);
-    Route::get('files/{id}', 'App\Http\Controllers\Api\FileController');
-    Route::post('/posts/change-publicity/{post}', 'App\Http\Controllers\Api\PostController@changePublicity');
+    Route::group(['middleware' => ['role:Super Admin']
+    ], function () {
+        Route::resources([
+            'posts' => PostController::class,
+        ]);
+        Route::get('files/{id}', 'App\Http\Controllers\Api\FileController');
+        Route::post('/posts/change-publicity/{post}', 'App\Http\Controllers\Api\PostController@changePublicity');
+    });
 });
 
 Route::post('/register', 'App\Http\Controllers\Api\AuthController@register');
