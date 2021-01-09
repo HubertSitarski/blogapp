@@ -23,6 +23,9 @@ Route::group([
     'middleware' => ['auth:api']
 ], function () {
     Route::get('logout', 'App\Http\Controllers\Api\AuthController@logout');
+    Route::get('profile/{user}', 'App\Http\Controllers\Api\ProfileController@show');
+    Route::put('profile/{user}', 'App\Http\Controllers\Api\ProfileController@update');
+
     Route::group(['middleware' => ['role:Super Admin']
     ], function () {
         Route::resources([
@@ -30,6 +33,7 @@ Route::group([
         ]);
         Route::get('files/{id}', 'App\Http\Controllers\Api\FileController');
         Route::post('/posts/change-publicity/{post}', 'App\Http\Controllers\Api\PostController@changePublicity');
+        Route::get('users', 'App\Http\Controllers\Api\UserController@index');
     });
 });
 

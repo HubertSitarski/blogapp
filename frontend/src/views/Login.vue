@@ -98,10 +98,11 @@
                   const headers = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + response.data
+                    'Authorization': 'Bearer ' + response.data.token
                   }
                   localforage.setItem('authUser', headers).then(() => {
-                    this.$router.push({name:'dashboard'})
+                    localforage.setItem('user', response.data.data)
+                    this.$router.push({name:'profile'})
                   })
                 }
               } else {

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\TransformerAbstract;
 
 class FractalService
@@ -18,9 +19,12 @@ class FractalService
     public function getTransformedItem(
         Model $model,
         TransformerAbstract $transformer,
-        array $includes = []
+        array $includes = [],
+        string $serializer = DataArraySerializer::class
     ): ?array {
         $item = new Item($model, $transformer);
+
+        $this->fractal->setSerializer(new $serializer);
 
         $this->fractal->parseIncludes($includes);
 

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
@@ -30,6 +31,10 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Super Admin') ? true : null;
+        });
+
+        Gate::define('manage-profile', function (User $loggedInUser, User $user) {
+            return $user->id === $loggedInUser->id;
         });
     }
 }

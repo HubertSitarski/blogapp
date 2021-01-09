@@ -5,7 +5,7 @@
                   containerClasses="px-4 container"
                   expand>
             <router-link slot="brand" class="navbar-brand" to="/">
-                <img src="img/brand/logo.png"/>
+                <img src="img/brand/white.png"/>
             </router-link>
 
             <template v-slot="{closeMenu}">
@@ -31,27 +31,15 @@
                 <!-- Navbar items -->
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <router-link class="nav-link nav-link-icon" to="/">
-                            <i class="ni ni-planet"></i>
-                            <span class="nav-link-inner--text">Dashboard</span>
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
                         <router-link class="nav-link nav-link-icon" to="/register">
                             <i class="ni ni-circle-08"></i>
-                            <span class="nav-link-inner--text">Register</span>
+                            <span class="nav-link-inner--text">Zarejestruj się</span>
                         </router-link>
                     </li>
                     <li class="nav-item">
                         <router-link class="nav-link nav-link-icon" to="/login">
                             <i class="ni ni-key-25"></i>
-                            <span class="nav-link-inner--text">Login</span>
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link class="nav-link nav-link-icon" to="/profile">
-                            <i class="ni ni-single-02"></i>
-                            <span class="nav-link-inner--text">Profile</span>
+                            <span class="nav-link-inner--text">Logowanie</span>
                         </router-link>
                     </li>
                 </ul>
@@ -88,7 +76,7 @@
                     <div class="col-xl-6">
                         <div class="copyright text-center text-xl-left text-muted">
                             &copy; {{year}} <a href="#" class="font-weight-bold ml-1"
-                                               target="_blank">Hubert Sitarski - dla High Solutions</a>
+                                               target="_blank">Hubert Sitarski</a>
                         </div>
                     </div>
                 </div>

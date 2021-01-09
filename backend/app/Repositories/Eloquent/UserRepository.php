@@ -22,4 +22,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return $this->model->create($data->toArray());
     }
+    public function update(User $user, Collection $data): User
+    {
+        return tap($user)->update($data->toArray());
+    }
 }

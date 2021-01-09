@@ -22,4 +22,14 @@ class UserService
         $user->assignRole(['User']);
         return $user;
     }
+
+    public function all(): Collection
+    {
+        return $this->userRepository->all();
+    }
+
+    public function update(User $user, Collection $data): User
+    {
+        return $this->userRepository->update($user, $data);
+    }
 }

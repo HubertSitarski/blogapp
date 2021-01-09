@@ -22,9 +22,10 @@ import './registerServiceWorker'
 import ArgonDashboard from './plugins/argon-dashboard'
 import store from './store'
 import {notifications} from "@/mixins/notifications";
+import BootstrapVue from "bootstrap-vue";
 
+Vue.use(BootstrapVue);
 Vue.config.productionTip = false
-
 Vue.mixin(notifications)
 Vue.use(ArgonDashboard)
 new Vue({

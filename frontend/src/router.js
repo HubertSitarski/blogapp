@@ -12,7 +12,7 @@ export const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: 'dashboard',
+      redirect: 'profile',
       component: DashboardLayout,
       children: [
         {
@@ -27,30 +27,9 @@ export const router = new Router({
           }
         },
         {
-          path: '/icons',
-          name: 'icons',
-          component: () => import(/* webpackChunkName: "demo" */ './views/Icons.vue')
-        },
-        {
           path: '/profile',
           name: 'profile',
           component: () => import(/* webpackChunkName: "demo" */ './views/UserProfile.vue'),
-          meta: {
-            requiresAuth: true,
-          }
-        },
-        {
-          path: '/maps',
-          name: 'maps',
-          component: () => import(/* webpackChunkName: "demo" */ './views/Maps.vue'),
-          meta: {
-            requiresAuth: true,
-          }
-        },
-        {
-          path: '/tables',
-          name: 'tables',
-          component: () => import(/* webpackChunkName: "demo" */ './views/Tables.vue'),
           meta: {
             requiresAuth: true,
           }

@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use League\Fractal\Serializer\ArraySerializer;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
@@ -38,8 +39,13 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid Credentials'], Response::HTTP_UNAUTHORIZED);
         }
 
+        $user = $this
+            ->fractalService
+            ->getTransformedItem(auth()->user(), $this->userTransformer, [], ArraySerializer::class)
+        ;
+
         return response()
-            ->json(['data' => $request->user()->createToken('authToken')->accessToken]);
+            ->json(['data' => $user, 'token' => $request->user()->createToken('authToken')->accessToken]);
     }
 
     public function logout(Request $request): JsonResponse
@@ -48,5 +54,4 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Successfully logged out']);
     }
-
 }
