@@ -10,7 +10,7 @@
       <!--Tables-->
       <div class="row mt-5">
         <div class="col-xl-12 mb-5 mb-xl-0">
-          <posts-visits-table></posts-visits-table>
+          <posts-table></posts-table>
         </div>
       </div>
       <!--End tables-->
@@ -23,11 +23,11 @@
 import * as chartConfigs from '@/components/Charts/config';
 
 // Tables
-import PostsTable from './PostsTable';
+import PostsTable from '../../components/Posts/PostsTable';
 
 export default {
   components: {
-    'posts-visits-table': PostsTable,
+    'posts-table': PostsTable,
   },
   data() {
     return {

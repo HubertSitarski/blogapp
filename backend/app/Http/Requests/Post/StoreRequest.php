@@ -16,7 +16,8 @@ class StoreRequest extends FormRequest
         return [
             'title' => 'required',
             'content' => 'required',
-            'files.*' => 'mimes:jpg,png,pdf,docx,text/plain,csv'
+            'files.*' => 'mimes:jpg,png,pdf,docx,text/plain,csv',
+            'is_published' => 'required'
         ];
     }
 }

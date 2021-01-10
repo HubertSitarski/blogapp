@@ -40,7 +40,7 @@
             {{row.published_at}}
           </td>
           <td>
-            <a href="#">Edytuj</a> | <a href="#!" @click="remove(row)" style="color: indianred;">Usuń</a>
+            <a href="#" @click="$router.push({name: 'posts-update', params: {id: row.id}})">Edytuj</a> | <a href="#!" @click="remove(row)" style="color: indianred;">Usuń</a>
           </td>
         </template>
 

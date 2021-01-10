@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,17 +17,17 @@ class Post extends Model
         'published_at'
     ];
 
-    protected $casts = [
-        'is_published' => 'boolean',
-    ];
-
     public function files()
     {
         return $this->morphMany(File::class, 'model');
     }
 
-    public function setIsPublishedAttribute($value)
+    public function updatePublishedAt()
     {
-        return (bool)$value;
+        if ((bool)$this->is_published === true) {
+            $this->published_at = Carbon::now();
+        } else {
+            $this->published_at = null;
+        }
     }
 }

@@ -16,9 +16,6 @@ class UpdateRequest extends FormRequest
         return [
             'title' => 'required',
             'content' => 'required',
-            'published_at' => 'date|required',
-            'is_published' => 'boolean|required',
-            'files.*' => 'mimes:jpg,png,pdf,docx,txt,csv'
         ];
     }
 }

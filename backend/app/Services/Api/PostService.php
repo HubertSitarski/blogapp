@@ -21,17 +21,28 @@ class PostService
         return $this->postRepository->all();
     }
 
-    public function create(Collection $data): Post
+    private function updatePublishedAt(Collection $data): Collection
     {
         if ($data->get('is_published') === true) {
             $data->put('published_at', Carbon::now());
+        } else {
+            $data->put('published_at', null);
         }
+
+        return $data;
+    }
+
+    public function create(Collection $data): Post
+    {
+        $data = $this->updatePublishedAt($data);
 
         return $this->postRepository->create($data);
     }
 
     public function update(Post $post, Collection $data): Post
     {
+        $data = $this->updatePublishedAt($data);
+
         return $this->postRepository->update($post, $data);
     }
 

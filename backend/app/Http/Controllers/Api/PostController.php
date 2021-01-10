@@ -74,7 +74,7 @@ class PostController extends Controller
                 $this
                     ->fractalService
                     ->getTransformedItem(
-                        $this->postService->update($post, collect($request->validated())),
+                        $this->postService->update($post, collect($request->all())),
                         $this->postTransformer
                     )
             );

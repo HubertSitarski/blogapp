@@ -49,6 +49,14 @@ export const router = new Router({
           meta: {
             requiresAuth: true,
           }
+        },
+        {
+          path: '/posts/update/:id',
+          name: 'posts-update',
+          component: () => import(/* webpackChunkName: "demo" */ './views/Posts/PostsUpdate.vue'),
+          meta: {
+            requiresAuth: true,
+          }
         }
       ]
     },

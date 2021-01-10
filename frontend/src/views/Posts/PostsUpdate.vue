@@ -8,7 +8,7 @@
       <div class="container-fluid d-flex align-items-center">
         <div class="row">
           <div class="col-lg-12">
-            <h1 class="display-2 text-white">Dodaj wpis</h1>
+            <h1 class="display-2 text-white">Edytuj wpis</h1>
           </div>
         </div>
       </div>
@@ -30,23 +30,25 @@ export default {
       errors: {
         title: '',
         content: '',
-      },
-      post: {
-        title: '',
-        content: '',
-        is_published: false,
-        files: []
       }
     }
   },
   components: {
     'posts-form': PostsForm
   },
+  computed: {
+    post() {
+      return this.$store.getters.getPost
+    }
+  },
   methods: {
     handleFormSubmit(post) {
-      this.$store.dispatch('createPost', post)
+      this.$store.dispatch('updatePost', post)
       this.$router.push({name: 'posts'})
-    }
+    },
+  },
+  created() {
+    this.$store.dispatch('fetchPost', {id: this.$route.params.id})
   }
 };
 </script>

@@ -28,7 +28,7 @@ export const posts = {
         },
         fetchPost({ commit }, payload) {
             return localforage.getItem('authUser').then((headers) => {
-                return axios.put(process.env.VUE_APP_API + `api/posts/${payload.id}`, payload, {headers})
+                return axios.get(process.env.VUE_APP_API + `api/posts/${payload.id}`, {headers})
                     .then((response) => {
                         if (response.status === 200) {
                             commit('SET_POST', response.data.data)
@@ -59,6 +59,35 @@ export const posts = {
                 return axios.post(process.env.VUE_APP_API + `api/posts`, formData, {headers})
                     .then((response) => {
                         if (response.status === 201) {
+                            commit('SET_POST', response.data.data)
+                        } else {
+                            console.error(response)
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    })
+            })
+        },
+        updatePost({ commit }, payload) {
+            return localforage.getItem('authUser').then((headers) => {
+                const formData = new FormData()
+                Object.keys(payload).forEach(e => {
+                    if (Array.isArray(payload[e])) {
+                        let counter = 0
+                        payload[e].forEach(el => {
+                            formData.append(e + '[' + counter.toString() + ']', el)
+                            counter += 1
+                        })
+                    } else {
+                        formData.append(e, payload[e])
+                    }
+                })
+                formData.append("_method", "put");
+
+                return axios.post(process.env.VUE_APP_API + `api/posts/${payload.id}`, formData, {headers})
+                    .then((response) => {
+                        if (response.status === 200) {
                             commit('SET_POST', response.data.data)
                         } else {
                             console.error(response)
