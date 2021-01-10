@@ -23,7 +23,7 @@ class PostService
 
     private function updatePublishedAt(Collection $data): Collection
     {
-        if ($data->get('is_published') === true) {
+        if ((bool)$data->get('is_published') === true) {
             $data->put('published_at', Carbon::now());
         } else {
             $data->put('published_at', null);
