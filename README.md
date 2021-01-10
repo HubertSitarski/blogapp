@@ -9,11 +9,13 @@
 5. Uruchamiamy komendę `php artisan passport:install`
 6. Uzywamy komendy `php artisan db:seed`
 7. Uzywamy komendy `php artisan storage:link`
-8. Uruchamiamy serwer komendą `php artisan serve`
-9. Przechodzimy do katalogu `frontend`
-10. Uruchamiamy `npm install`
-11. Uruchamamy serwer komendą `npm run serve`
-12. Pod adresem `127.0.0.1:8000` znajdziemy API, pod adresem `127.0.0.1:8080` znajdziemy warstwę front-endową
+8. Uzywamy komendy `php artisan key:generate`
+9. Uzywamy komendy `php artisan config:cache`
+10. Uruchamiamy serwer komendą `php artisan serve`
+11. Przechodzimy do katalogu `frontend`
+12. Uruchamiamy `npm install`
+13. Uruchamamy serwer komendą `npm run serve`
+14. Pod adresem `127.0.0.1:8000` znajdziemy API, pod adresem `127.0.0.1:8080` znajdziemy warstwę front-endową
 
 ## 2. Omówienie
 
@@ -40,3 +42,12 @@ W przyszłości aplikacja zostanie rozwinięta o dodatkowe funkcjonalności.
 
 ## 4. Przydatne komendy
 `php artisan queue:work` - wysłanie zakolejkowanych emaili, które powstały po rejestracji użytkownika
+
+## 5. Dane do logowania
+* Super Admin
+    * login: admin@example.pl
+    * hasło: admin
+    
+* User
+    * login: user@example.pl
+    * hasło: user
