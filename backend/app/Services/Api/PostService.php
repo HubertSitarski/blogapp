@@ -5,6 +5,7 @@ namespace App\Services\Api;
 use App\Models\Post;
 use App\Repositories\FileRepositoryInterface;
 use App\Repositories\PostRepositoryInterface;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class PostService
@@ -22,6 +23,10 @@ class PostService
 
     public function create(Collection $data): Post
     {
+        if ($data->get('is_published') === true) {
+            $data->put('published_at', Carbon::now());
+        }
+
         return $this->postRepository->create($data);
     }
 
@@ -38,6 +43,10 @@ class PostService
 
     public function changePublicity(Post $post): Post
     {
+        if ((!$post->is_published) === true) {
+            $post->published_at = Carbon::now();
+        }
+
         return $this->postRepository->update($post, collect(['is_published' => !$post->is_published]));
     }
 }

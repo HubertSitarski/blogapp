@@ -7,6 +7,7 @@
     >
       <template slot="links">
         <sidebar-item :link="{name: 'Profil', icon: 'ni ni-single-02 text-yellow', path: '/profile'}"/>
+        <sidebar-item :link="{name: 'Wpisy', icon: 'ni ni-single-copy-04 text-green', path: '/posts'}"/>
         <sidebar-item :link="{name: 'Wyloguj', icon: 'ni ni-user-run text-info', path: '/logout'}"/>
       </template>
     </side-bar>

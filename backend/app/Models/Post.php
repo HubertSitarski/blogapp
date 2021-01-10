@@ -16,8 +16,17 @@ class Post extends Model
         'published_at'
     ];
 
+    protected $casts = [
+        'is_published' => 'boolean',
+    ];
+
     public function files()
     {
         return $this->morphMany(File::class, 'model');
+    }
+
+    public function setIsPublishedAttribute($value)
+    {
+        return (bool)$value;
     }
 }

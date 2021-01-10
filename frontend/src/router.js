@@ -33,6 +33,22 @@ export const router = new Router({
           meta: {
             requiresAuth: true,
           }
+        },
+        {
+          path: '/posts',
+          name: 'posts',
+          component: () => import(/* webpackChunkName: "demo" */ './views/Posts/PostsList.vue'),
+          meta: {
+            requiresAuth: true,
+          }
+        },
+        {
+          path: '/posts/add',
+          name: 'posts-add',
+          component: () => import(/* webpackChunkName: "demo" */ './views/Posts/PostsAdd.vue'),
+          meta: {
+            requiresAuth: true,
+          }
         }
       ]
     },
