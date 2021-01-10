@@ -6,45 +6,36 @@ use Gate;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\Api\FractalService;
-use App\Services\Api\UserService;
+use App\Services\Api\Repositories\UserService;
+use App\Services\Api\UserService as BasicUserSerivce;
 use App\Transformers\Api\UserTransformer;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\User\UpdateRequest;
+use Illuminate\Http\Response;
 
 class ProfileController extends Controller
 {
     public function __construct(
         private FractalService $fractalService,
         private UserTransformer $userTransformer,
-        private UserService $userService
+        private UserService $userService,
+        private BasicUserSerivce $basicUserService
     ) {
-    }
-
-    public function index(): JsonResponse
-    {
-        return response()
-            ->json(
-                $this->fractalService->getTransformedCollection($this->userService->all(), $this->userTransformer)
-            );
     }
 
     public function show(User $user): JsonResponse
     {
         Gate::authorize('manage-profile', $user);
-        return response()->json($this->fractalService->getTransformedItem($user, $this->userTransformer));
+        return Response::apiResponse($this->basicUserService->getUserTransformed($user));
     }
 
     public function update(UpdateRequest $request, User $user): JsonResponse
     {
         Gate::authorize('manage-profile', $user);
-        return response()
-            ->json(
-                $this
-                    ->fractalService
-                    ->getTransformedItem(
-                        $this->userService->update($user, collect($request->validated())),
-                        $this->userTransformer
-                    )
-            );
+        return Response::apiResponse(
+            $this
+            ->basicUserService
+            ->getUserTransformed($this->userService->update($user, collect($request->validated())))
+        );
     }
 }

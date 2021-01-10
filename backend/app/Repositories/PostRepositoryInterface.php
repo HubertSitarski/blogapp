@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 
 interface PostRepositoryInterface
 {
-    public function all(): Collection;
+    public function all(?bool $onlyPublished = false): Collection;
 
     public function create(Collection $data): Post;
 

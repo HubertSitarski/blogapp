@@ -5,7 +5,7 @@ namespace App\Providers;
 use Str;
 use Illuminate\Support\ServiceProvider;
 
-class MacroServiceProvider extends ServiceProvider
+class ExtendStrHelperProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.

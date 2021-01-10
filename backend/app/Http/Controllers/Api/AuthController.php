@@ -4,23 +4,25 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Jobs\SendRegisteredNotificationJob;
-use App\Notifications\UserRegisteredNotification;
 use App\Services\Api\FractalService;
-use App\Services\Api\UserService;
+use App\Services\Api\Repositories\UserService;
+use App\Services\Api\UserService as BasicUserService;
 use App\Transformers\Api\UserTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Http\Response;
 use League\Fractal\Serializer\ArraySerializer;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseCode;
 
 class AuthController extends Controller
 {
     public function __construct(
         private FractalService $fractalService,
         private UserTransformer $userTransformer,
-        private UserService $userService
+        private UserService $userService,
+        private BasicUserService $basicUserService
     ) {
     }
 
@@ -28,9 +30,8 @@ class AuthController extends Controller
     {
         $user = $this->userService->register(collect($request->validated()));
         SendRegisteredNotificationJob::dispatch($user);
-        return response()
-            ->json($this->fractalService->getTransformedItem($user, $this->userTransformer), Response::HTTP_CREATED)
-            ;
+
+        return Response::apiResponse($this->basicUserService->getUserTransformed($user), ResponseCode::HTTP_CREATED);
     }
 
     public function login(LoginRequest $request): JsonResponse
@@ -39,19 +40,18 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid Credentials'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $user = $this
-            ->fractalService
-            ->getTransformedItem(auth()->user(), $this->userTransformer, [], ArraySerializer::class)
-        ;
+        $user = $this->basicUserService->getUserTransformed(auth()->user(), [], ArraySerializer::class);
 
-        return response()
-            ->json(['data' => $user, 'token' => $request->user()->createToken('authToken')->accessToken]);
+        return Response::apiResponse([
+            'data' => $user,
+            'token' => $request->user()->createToken('authToken')->accessToken
+        ]);
     }
 
     public function logout(Request $request): JsonResponse
     {
         $request->user()->token()->revoke();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return Response::apiResponse(['message' => 'Successfully logged out']);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,5 +30,11 @@ class Post extends Model
         } else {
             $this->published_at = null;
         }
+    }
+
+
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('is_published', 1);
     }
 }

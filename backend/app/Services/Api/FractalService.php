@@ -12,15 +12,16 @@ use League\Fractal\TransformerAbstract;
 
 class FractalService
 {
-    public function __construct(private Manager $fractal)
-    {
+    public function __construct(
+        private Manager $fractal
+    ) {
     }
 
     public function getTransformedItem(
         Model $model,
         TransformerAbstract $transformer,
         array $includes = [],
-        string $serializer = DataArraySerializer::class
+        ?string $serializer = DataArraySerializer::class
     ): ?array {
         $item = new Item($model, $transformer);
 
@@ -34,9 +35,12 @@ class FractalService
     public function getTransformedCollection(
         IlluminateCollection $illuminateCollection,
         TransformerAbstract $transformer,
-        array $includes = []
+        array $includes = [],
+        ?string $serializer = DataArraySerializer::class
     ): ?array {
         $collection = new Collection($illuminateCollection, $transformer);
+
+        $this->fractal->setSerializer(new $serializer);
 
         $this->fractal->parseIncludes($includes);
 

@@ -8,14 +8,15 @@ use Illuminate\Support\Collection;
 
 class PostRepository extends BaseRepository implements PostRepositoryInterface
 {
-    public function __construct(Post $model)
-    {
+    public function __construct(
+        Post $model
+    ) {
         parent::__construct($model);
     }
 
-    public function all(): Collection
+    public function all(?bool $onlyPublished = false): Collection
     {
-        return $this->model->all();
+        return $onlyPublished === true ?  $this->model->published()->get() : $this->model->all();
     }
 
     public function create(Collection $data): Post

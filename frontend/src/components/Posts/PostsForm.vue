@@ -48,7 +48,7 @@
               </div>
               <hr class="my-4" />
               <h6 class="heading-small text-muted mb-4">Pliki</h6>
-              <div class="col-lg-12">
+              <div class="col-lg-12" v-if="post">
                 <b-form-file
                     v-model="post.files"
                     multiple
@@ -97,7 +97,6 @@ export default {
   },
   methods: {
     validate(){
-      console.log(this.post.files[0])
       var validated = true
       this.errors.title = ''
       this.errors.content = ''

@@ -8,8 +8,9 @@ use Illuminate\Support\Collection;
 
 class FileRepository extends BaseRepository implements FileRepositoryInterface
 {
-    public function __construct(File $model)
-    {
+    public function __construct(
+        File $model
+    ) {
         parent::__construct($model);
     }
 

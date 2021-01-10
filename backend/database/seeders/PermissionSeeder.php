@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PermissionEnum;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 
@@ -14,6 +15,6 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        Permission::create(['name' => 'get premium posts']);
+        Permission::create(['name' => PermissionEnum::GET_PREMIUM_POSTS_PERMISSION]);
     }
 }

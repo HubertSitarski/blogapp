@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -35,11 +36,11 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->renderable(function (UnauthorizedException $e, $request) {
+        $this->renderable(function (UnauthorizedException $e, $request): JsonResponse {
             return response()->json(['message' => 'Invalid permissions'], Response::HTTP_FORBIDDEN);
         });
 
-        $this->renderable(function (AccessDeniedHttpException $e, $request) {
+        $this->renderable(function (AccessDeniedHttpException $e, $request): JsonResponse {
             return response()->json(['message' => 'Invalid permissions'], Response::HTTP_FORBIDDEN);
         });
     }

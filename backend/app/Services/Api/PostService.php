@@ -3,25 +3,19 @@
 namespace App\Services\Api;
 
 use App\Models\Post;
-use App\Repositories\FileRepositoryInterface;
-use App\Repositories\PostRepositoryInterface;
+use App\Transformers\Api\PostTransformer;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class PostService
 {
     public function __construct(
-        private PostRepositoryInterface $postRepository,
-        private FileService $fileService
+        private PostTransformer $postTransformer,
+        private FractalService $fractalService
     ) {
     }
 
-    public function all(): Collection
-    {
-        return $this->postRepository->all();
-    }
-
-    private function updatePublishedAt(Collection $data): Collection
+    public function updatePublishedAt(Collection $data): Collection
     {
         if ((bool)$data->get('is_published') === true) {
             $data->put('published_at', Carbon::now());
@@ -32,24 +26,20 @@ class PostService
         return $data;
     }
 
-    public function create(Collection $data): Post
+    public function getPostTransformed(Post $post): array
     {
-        $data = $this->updatePublishedAt($data);
-
-        return $this->postRepository->create($data);
+        return $this->fractalService->getTransformedItem(
+            $post,
+            $this->postTransformer
+        );
     }
 
-    public function update(Post $post, Collection $data): Post
+    public function getPostsTransformed(Collection $data): array
     {
-        $data = $this->updatePublishedAt($data);
-
-        return $this->postRepository->update($post, $data);
-    }
-
-    public function destroy(Post $post): bool
-    {
-        $this->fileService->destroy($post->files);
-        return $this->postRepository->destroy($post);
+        return $this->fractalService->getTransformedCollection(
+            $data,
+            $this->postTransformer
+        );
     }
 
     public function changePublicity(Post $post): Post
@@ -58,6 +48,6 @@ class PostService
             $post->published_at = Carbon::now();
         }
 
-        return $this->postRepository->update($post, collect(['is_published' => !$post->is_published]));
+        return  $post;
     }
 }

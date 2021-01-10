@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Enums\PermissionEnum;
+use App\Enums\RoleEnum;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -9,15 +11,6 @@ use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    /**
-     * The policy mappings for the application.
-     *
-     * @var array
-     */
-    protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-    ];
-
     /**
      * Register any authentication / authorization services.
      *
@@ -27,14 +20,27 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Passport::routes();
+        $this->initPassport();
+        $this->giveAllPermissionsToSuperAdmin();
+        $this->giveManageProfilePermissions();
+    }
 
+    private function giveAllPermissionsToSuperAdmin(): void
+    {
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('Super Admin') ? true : null;
+            return $user->hasRole(RoleEnum::ROLE_SUPER_ADMIN) ? true : null;
         });
+    }
 
-        Gate::define('manage-profile', function (User $loggedInUser, User $user) {
+    private function giveManageProfilePermissions(): void
+    {
+        Gate::define(PermissionEnum::MANAGE_PROFILE_PERMISSION, function (User $loggedInUser, User $user) {
             return $user->id === $loggedInUser->id;
         });
+    }
+
+    private function initPassport()
+    {
+        Passport::routes();
     }
 }

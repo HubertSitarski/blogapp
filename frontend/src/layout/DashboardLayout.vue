@@ -7,7 +7,7 @@
     >
       <template slot="links">
         <sidebar-item :link="{name: 'Profil', icon: 'ni ni-single-02 text-yellow', path: '/profile'}"/>
-        <sidebar-item :link="{name: 'Wpisy', icon: 'ni ni-single-copy-04 text-green', path: '/posts'}"/>
+        <sidebar-item v-if="loggedUser && loggedUser.role == 'Super Admin'" :link="{name: 'Wpisy', icon: 'ni ni-single-copy-04 text-green', path: '/posts'}"/>
         <sidebar-item :link="{name: 'Wyloguj', icon: 'ni ni-user-run text-info', path: '/logout'}"/>
       </template>
     </side-bar>
@@ -28,6 +28,7 @@
   import DashboardNavbar from './DashboardNavbar.vue';
   import ContentFooter from './ContentFooter.vue';
   import { FadeTransition } from 'vue2-transitions';
+  import localforage from "localforage";
 
   export default {
     components: {
@@ -37,6 +38,7 @@
     },
     data() {
       return {
+        loggedUser: null,
         sidebarBackground: 'vue' //vue|blue|orange|green|red|primary
       };
     },
@@ -46,6 +48,14 @@
           this.$sidebar.displaySidebar(false);
         }
       }
+    },
+    created() {
+      localforage.getItem('user').then((data) => {
+        if (data) {
+          this.loggedUser = data
+          this.$store.dispatch('fetchUser', { id: data.id })
+        }
+      })
     }
   };
 </script>

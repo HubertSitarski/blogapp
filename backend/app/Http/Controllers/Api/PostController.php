@@ -8,10 +8,13 @@ use App\Http\Requests\Post\UpdateRequest;
 use App\Models\Post;
 use App\Services\Api\FileService;
 use App\Services\Api\FractalService;
-use App\Services\Api\PostService;
+use App\Services\Api\Repositories\PostService;
+use App\Services\Api\PostService as BasicPostService;
 use App\Transformers\Api\PostTransformer;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseCode;
 
 class PostController extends Controller
 {
@@ -19,16 +22,18 @@ class PostController extends Controller
         private PostService $postService,
         private FractalService $fractalService,
         private PostTransformer $postTransformer,
-        private FileService $fileService
+        private FileService $fileService,
+        private BasicPostService $basicPostService
     ) {
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()
-            ->json(
-                $this->fractalService->getTransformedCollection($this->postService->all(), $this->postTransformer)
-            );
+        $posts = $this
+            ->basicPostService
+            ->getPostsTransformed($this->postService->all($request->get('only_published')));
+
+        return Response::apiResponse($posts);
     }
 
     public function store(StoreRequest $request): JsonResponse
@@ -37,64 +42,30 @@ class PostController extends Controller
 
         $files = $request->file('files');
 
-        if ($files && is_array($files)) {
-            $this->fileService->upload($files, $post);
-        }
+        $this->postService->updateUploadedFiles($post, $files);
 
-        return response()
-            ->json(
-                $this
-                    ->fractalService
-                    ->getTransformedItem(
-                        $post,
-                        $this->postTransformer
-                    ),
-                Response::HTTP_CREATED
-            );
+        return Response::apiResponse($this->basicPostService->getPostTransformed($post), ResponseCode::HTTP_CREATED);
     }
 
     public function show(Post $post): JsonResponse
     {
-        return response()
-            ->json($this->fractalService->getTransformedItem($post, $this->postTransformer))
-            ;
+        return Response::apiResponse($this->basicPostService->getPostTransformed($post));
     }
 
     public function update(UpdateRequest $request, Post $post): JsonResponse
     {
         $files = $request->file('files');
 
-        if ($files && is_array($files)) {
-            $this->fileService->destroy($post->files);
-            $this->fileService->upload($files, $post);
-        }
+        $this->postService->updateUploadedFiles($post, $files, true);
 
-        return response()
-            ->json(
-                $this
-                    ->fractalService
-                    ->getTransformedItem(
-                        $this->postService->update($post, collect($request->all())),
-                        $this->postTransformer
-                    )
-            );
+        $post = $this->postService->update($post, collect($request->all()));
+
+        return Response::apiResponse($this->basicPostService->getPostTransformed($post));
     }
 
     public function destroy(Post $post): JsonResponse
     {
-        return response()->json($this->postService->destroy($post), Response::HTTP_NO_CONTENT);
-    }
-
-    public function changePublicity(Post $post): JsonResponse
-    {
-        return response()
-            ->json(
-                $this
-                    ->fractalService
-                    ->getTransformedItem(
-                        $this->postService->changePublicity($post),
-                        $this->postTransformer
-                    )
-            );
+        $this->postService->destroy($post);
+        return Response::apiResponse([], ResponseCode::HTTP_NO_CONTENT);
     }
 }

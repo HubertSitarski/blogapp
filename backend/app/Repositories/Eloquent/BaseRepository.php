@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
-    public function __construct(protected Model $model)
-    {
+    public function __construct(
+        protected Model $model
+    ) {
     }
 
     public function find(int $id): ?Model

@@ -3,33 +3,46 @@
 namespace App\Services\Api;
 
 use App\Models\User;
-use App\Repositories\Eloquent\UserRepository;
-use App\Repositories\UserRepositoryInterface;
+use App\Transformers\Api\UserTransformer;
 use Illuminate\Support\Collection;
+use League\Fractal\Serializer\DataArraySerializer;
 
 class UserService
 {
-    public function __construct(private UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        private FractalService $fractalService,
+        private UserTransformer $userTransformer
+    ) {
     }
 
-    public function register(Collection $data): User
-    {
-        $data->put('password', \Hash::make($data->get('password')));
-
-        $user = $this->userRepository->create($data);
-
-        $user->assignRole(['User']);
-        return $user;
+    public function getUserTransformed(
+        User $user,
+        ?array $includes = [],
+        ?string $serializer = DataArraySerializer::class
+    ): array {
+        return $this->fractalService->getTransformedItem(
+            $user,
+            $this->userTransformer,
+            $includes,
+            $serializer
+        );
     }
 
-    public function all(): Collection
-    {
-        return $this->userRepository->all();
+    public function getUsersTransformed(
+        Collection $data,
+        ?array $includes = [],
+        ?string $serializer = DataArraySerializer::class
+    ): array {
+        return $this->fractalService->getTransformedCollection(
+            $data,
+            $this->userTransformer,
+            $includes,
+            $serializer
+        );
     }
 
-    public function update(User $user, Collection $data): User
+    public function hashPassword(string $password): string
     {
-        return $this->userRepository->update($user, $data);
+        return \Hash::make($password);
     }
 }
